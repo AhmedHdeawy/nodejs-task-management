@@ -26,8 +26,8 @@ const start = async () => {
         await dbConnection(process.env.MONGO_DB_URL)
 
         //  start the app
-        app.listen(5002, () => {
-            console.log('the app has started and listen to 5002 .....');
+        app.listen(process.env.APP_PORT, () => {
+            console.log(`the app has started and listen to ${process.env.APP_PORT} .....`);
         })
     } catch (error) {
         
