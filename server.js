@@ -3,19 +3,24 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const tasksRoutes = require('./Routes/tasks');
 const dbConnection = require('./config/database/connection');
+const routeNotFound = require('./Middlewares/route-not-found');
+const errorHandler = require('./Middlewares/error-handler');
 require('dotenv').config()
 
-
-
 const app = express();
+
+
+// Middlewares
 // app.use(cors)
+app.use(express.static('./public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 
-app.use(express.static('./public'))
 // Routes
 app.use('/api/v1/tasks', tasksRoutes)
+app.use(routeNotFound)
+app.use(errorHandler)
 
 
 

@@ -5,11 +5,10 @@ const successResponse = (data, message = 'success') => {
     }
 }
 
-const errorResponse = (message, error = null, status = 400) => {
+const errorResponse = (message, error = null) => {
     return {
         message,
-        error,
-        status
+        error
     }
 }
 

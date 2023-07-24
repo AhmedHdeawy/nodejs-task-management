@@ -1,14 +1,12 @@
 const Task = require("../../Models/Task");
 const { successResponse, errorResponse } = require("../../utils/apiResponse");
+const asyncWrapper = require("../../utils/asyncWrapper");
+const { modelNotFoundError } = require("../../utils/model-not-found");
 
-const index = async (req, res) => {
-    try {
-        const tasks = await Task.find({});
-        res.status(200).json(successResponse(tasks))
-    } catch (error) {
-        res.status(500).json(errorResponse(error))
-    }
-}
+const index = asyncWrapper(async (req, res) => {
+    const tasks = await Task.find({});
+    res.status(200).json(successResponse(tasks))
+})
 
 
 const store = async (req, res) => {
@@ -21,17 +19,17 @@ const store = async (req, res) => {
 
 }
 
-const getTask = async (req, res) => {
-    try {
-        const task = await Task.findById(req.params.id);
-        if (!task) {
-            return res.status(500).json(errorResponse(`Task with id ${req.params.id} is not found`))
-        }
-        res.status(200).json(successResponse(task))
-    } catch (error) {
-        res.status(500).json(errorResponse(error))
+const getTask = asyncWrapper(async (req, res) => {
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+        throw modelNotFoundError(`Task with id ${req.params.id} is not found`)
+        const err = new Error(`Task with id ${req.params.id} is not found`)
+        err.statusCode = 422
+        throw err
+        return res.status(500).json(errorResponse(`Task with id ${req.params.id} is not found`))
     }
-}
+    res.status(200).json(successResponse(task))
+})
 
 const update = async (req, res) => {
     try {
